@@ -1,4 +1,7 @@
-// Local Headers
+﻿// Local Headers
+#include "template.hpp"
+
+// GlitterLib Header
 #include "glitter.hpp"
 
 // System Headers
@@ -9,7 +12,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-int main(int argc, char * argv[]) {
+int main(int argc, char* argv[]) {
 
     // Load GLFW and Create a Window
     glfwInit();
