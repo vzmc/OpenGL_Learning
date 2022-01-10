@@ -1,6 +1,6 @@
-# 用于学习OpenGL的框架
-## 用Glitter调整而成
+# 用于学习OpenGL的项目
+## 基于Glitter框架
 https://github.com/Polytonic/Glitter
 
 # 项目内容
-todo
+- 绘制三角形
