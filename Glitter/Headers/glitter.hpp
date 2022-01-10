@@ -19,6 +19,6 @@
 
 // Define Some Constants
 constexpr int mWidth = 1280;
-constexpr int mHeight = 800;
+constexpr int mHeight = 720;
 
 #endif //~ Glitter Header

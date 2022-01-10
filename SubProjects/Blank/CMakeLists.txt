@@ -1,4 +1,4 @@
-﻿project(Template)
+﻿project(Blank)
 
 include_directories(Headers/
                     ${CMAKE_SOURCE_DIR}/Glitter/Headers/

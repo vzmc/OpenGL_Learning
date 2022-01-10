@@ -1,5 +1,5 @@
 ﻿// Local Headers
-#include "template.hpp"
+#include "header.hpp"
 
 // GlitterLib Header
 #include "glitter.hpp"
@@ -11,6 +11,9 @@
 // Standard Headers
 #include <cstdio>
 #include <cstdlib>
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void processInput(GLFWwindow *window);
 
 int main(int argc, char* argv[]) {
 
@@ -31,13 +34,16 @@ int main(int argc, char* argv[]) {
 
     // Create Context and Load OpenGL Functions
     glfwMakeContextCurrent(mWindow);
+    glfwSetFramebufferSizeCallback(mWindow, framebuffer_size_callback);
     gladLoadGL();
     fprintf(stderr, "OpenGL %s\n", glGetString(GL_VERSION));
 
+    framebuffer_size_callback(mWindow, mWidth, mHeight);
+
     // Rendering Loop
     while (glfwWindowShouldClose(mWindow) == false) {
-        if (glfwGetKey(mWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-            glfwSetWindowShouldClose(mWindow, true);
+
+        processInput(mWindow);
 
         // Background Fill Color
         glClearColor(0.25f, 0.25f, 0.25f, 1.0f);
@@ -46,6 +52,19 @@ int main(int argc, char* argv[]) {
         // Flip Buffers and Draw
         glfwSwapBuffers(mWindow);
         glfwPollEvents();
-    }   glfwTerminate();
+    }
+
+    glfwTerminate();
     return EXIT_SUCCESS;
+}
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+    fprintf(stderr, "Viewport changed (%d, %d)\n", width, height);
+    glViewport(0, 0, mWidth, mHeight);
+}
+
+void processInput(GLFWwindow* window) {
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+        glfwSetWindowShouldClose(window, true);
+    }
 }
