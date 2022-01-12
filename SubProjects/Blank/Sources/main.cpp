@@ -13,7 +13,7 @@
 #include <cstdlib>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow *window);
+void process_input(GLFWwindow *window);
 
 int main(int argc, char* argv[]) {
 
@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
     // Rendering Loop
     while (glfwWindowShouldClose(mWindow) == false) {
 
-        processInput(mWindow);
+        process_input(mWindow);
 
         // Background Fill Color
         glClearColor(0.25f, 0.25f, 0.25f, 1.0f);
@@ -63,7 +63,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, mWidth, mHeight);
 }
 
-void processInput(GLFWwindow* window) {
+void process_input(GLFWwindow* window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
     }
