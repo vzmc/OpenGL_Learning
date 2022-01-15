@@ -47,17 +47,20 @@ int main(int argc, char* argv[]) {
          0.0f,  0.5f, 0.0f
     };
 
-    GLuint VBO;
-    glGenBuffers(1, &VBO);
+    // 创建VAO
     GLuint VAO;
     glGenVertexArrays(1, &VAO);
-    // 1. 绑定VAO
+    // 绑定VAO
     glBindVertexArray(VAO);
-    // 2. 把顶点数组复制到缓冲中供OpenGL使用
+
+    // 创建VBO
+    GLuint VBO;
+    glGenBuffers(1, &VBO);
+    // 把顶点数组复制到缓冲中供OpenGL使用
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    // 3. 设置顶点属性指针
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), static_cast<void*>(0));
+    // 设置顶点属性指针
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), static_cast<GLvoid*>(0));
     glEnableVertexAttribArray(0);
 
     Mirage::Shader shader;
@@ -68,7 +71,6 @@ int main(int argc, char* argv[]) {
 
     // Rendering Loop
     while (glfwWindowShouldClose(mWindow) == false) {
-
         process_input(mWindow);
 
         // Background Fill Color
