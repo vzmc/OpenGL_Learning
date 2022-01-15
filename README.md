@@ -1,4 +1,7 @@
 # 用于学习OpenGL的项目
+## 学习资料
+- https://learnopengl-cn.github.io/
+
 ## 基于Glitter框架改编
 - https://github.com/Polytonic/Glitter
 
