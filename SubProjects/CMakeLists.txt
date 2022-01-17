@@ -2,3 +2,4 @@
 add_subdirectory(DrawTriangle)
 add_subdirectory(DrawRectangle)
 add_subdirectory(SetUniformColor)
+add_subdirectory(SetVertexColor)
