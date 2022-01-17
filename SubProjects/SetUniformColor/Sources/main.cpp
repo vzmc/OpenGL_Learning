@@ -75,17 +75,17 @@ int main(int argc, char* argv[]) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
+    // 创建一个shader
     Mirage::Shader shader;
-    shader.attach("basic.vert")
-          .attach("basic.frag");
+    shader.attach("color.vert")
+          .attach("color.frag");
     shader.link();
-    shader.activate();
 
     // 设置为线框模式
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     // 设置为填充模式
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     // Rendering Loop
     while (glfwWindowShouldClose(mWindow) == false) {
@@ -95,6 +95,15 @@ int main(int argc, char* argv[]) {
         glClearColor(0.25f, 0.25f, 0.25f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        // 激活shader
+        shader.activate();
+
+        float time = glfwGetTime();
+        float green = sin(time) / 2.0f + 0.5f;
+        int colorLocation = glGetUniformLocation(shader.get(), "ourColor");
+        glUniform4f(colorLocation, 0.0f, green, 0.0f, 1.0f);
+
+        glBindVertexArray(VAO);
         // 绘制索引图形
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, static_cast<GLvoid*>(0));
 
