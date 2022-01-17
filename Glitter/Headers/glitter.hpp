@@ -19,8 +19,8 @@
 #include "GLFW/glfw3.h"
 
 // Define Some Constants
-constexpr int mWidth = 1280;
-constexpr int mHeight = 720;
+constexpr int mWidth = 800;
+constexpr int mHeight = 600;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     fprintf(stderr, "Viewport changed (%d, %d)\n", width, height);
