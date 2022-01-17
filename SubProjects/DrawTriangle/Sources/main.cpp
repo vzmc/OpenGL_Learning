@@ -14,9 +14,6 @@
 
 #include <shader.hpp>
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void process_input(GLFWwindow *window);
-
 int main(int argc, char* argv[]) {
 
     // Load GLFW and Create a Window
@@ -64,8 +61,8 @@ int main(int argc, char* argv[]) {
     glEnableVertexAttribArray(0);
 
     Mirage::Shader shader;
-    shader.attach("shader.vert")
-          .attach("shader.frag");
+    shader.attach("basic.vert")
+          .attach("basic.frag");
     shader.link();
     shader.activate();
 
@@ -87,15 +84,4 @@ int main(int argc, char* argv[]) {
 
     glfwTerminate();
     return EXIT_SUCCESS;
-}
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-    fprintf(stderr, "Viewport changed (%d, %d)\n", width, height);
-    glViewport(0, 0, mWidth, mHeight);
-}
-
-void process_input(GLFWwindow* window) {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-        glfwSetWindowShouldClose(window, true);
-    }
 }

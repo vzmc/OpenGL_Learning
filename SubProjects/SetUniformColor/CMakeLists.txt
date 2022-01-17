@@ -1,4 +1,4 @@
-﻿project(Blank)
+﻿project(SetUniformColor)
 
 include_directories(Headers/
                     ${CMAKE_SOURCE_DIR}/Glitter/Headers/
