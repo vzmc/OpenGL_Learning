@@ -1,4 +1,6 @@
 # 用于学习OpenGL的项目
+https://user-images.githubusercontent.com/6869650/149810557-f4b9909d-3f6a-4df4-b8db-562287877ce1.mp4
+
 ## 学习资料
 - https://learnopengl-cn.github.io/
 
