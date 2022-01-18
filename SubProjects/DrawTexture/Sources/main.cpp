@@ -11,6 +11,7 @@
 // Standard Headers
 #include <cstdio>
 #include <cstdlib>
+#include <iostream>
 
 #include <shader.hpp>
 
@@ -38,12 +39,20 @@ int main(int argc, char* argv[]) {
     gladLoadGL();
     fprintf(stderr, "OpenGL %s\n", glGetString(GL_VERSION));
 
-    // 定义三角形的顶点和相位差
-    float vertices[] = {
-        // 位置              // 相位差
-         0.5f, -0.5f, 0.0f,  0.0f,   // 右下
-        -0.5f, -0.5f, 0.0f,  1.0f,   // 左下
-         0.0f,  0.5f, 0.0f,  2.0f    // 顶部
+    // 定义矩形顶点坐标和贴图坐标
+    constexpr GLfloat vertices[] = {
+    //     ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
+         0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // 右上
+         0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // 右下
+        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // 左下
+        -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // 左上
+    };
+
+    // 定义三角形顶点索引
+    // 注意索引从0开始!
+    constexpr GLuint indices[] = { 
+        0, 1, 3, // 第一个三角形
+        1, 2, 3  // 第二个三角形
     };
 
     // 创建VAO
@@ -59,16 +68,76 @@ int main(int argc, char* argv[]) {
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     // 设置顶点属性
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), static_cast<GLvoid*>(0));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), static_cast<GLvoid*>(0));
     glEnableVertexAttribArray(0);
-    // 设置相位差属性
-    glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), reinterpret_cast<GLvoid*>(3 * sizeof(GLfloat)));
+    // 设置颜色属性
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), reinterpret_cast<GLvoid*>(3 * sizeof(GLfloat)));
     glEnableVertexAttribArray(1);
+    // 设置纹理坐标属性
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), reinterpret_cast<GLvoid*>(6 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(2);
+
+    // 创建EBO
+    GLuint EBO;
+    glGenBuffers(1, &EBO);
+    // 绑定缓冲并设置
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+    // 读取纹理
+    GLuint texture1;
+    {
+        glGenTextures(1, &texture1);
+        glBindTexture(GL_TEXTURE_2D, texture1);
+        // 为当前绑定的纹理对象设置环绕、过滤方式
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        constexpr float borderColor[] = { 1.0f, 1.0f, 0.0f, 1.0f };
+        glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+        // 加载并生成纹理
+        GLint width, height, nrChannels;
+        stbi_set_flip_vertically_on_load(true);
+        const auto data = stbi_load("Textures/cat.png", &width, &height, &nrChannels, 0);
+        if (data) {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+            glGenerateMipmap(GL_TEXTURE_2D);
+        } else {
+            std::cout << "Failed to load texture" << std::endl;
+        }
+        stbi_image_free(data);
+    }
+
+    // 读取纹理
+    GLuint texture2;
+    {
+        glGenTextures(1, &texture2);
+        glBindTexture(GL_TEXTURE_2D, texture2);
+        // 为当前绑定的纹理对象设置环绕、过滤方式
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        constexpr float borderColor[] = { 1.0f, 1.0f, 0.0f, 1.0f };
+        glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+        // 加载并生成纹理
+        GLint width, height, nrChannels;
+        stbi_set_flip_vertically_on_load(true);
+        const auto data = stbi_load("Textures/cat2.jpg", &width, &height, &nrChannels, 0);
+        if (data) {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+            glGenerateMipmap(GL_TEXTURE_2D);
+        } else {
+            std::cout << "Failed to load texture" << std::endl;
+        }
+        stbi_image_free(data);
+    }
 
     // 创建一个shader
     Mirage::Shader shader;
-    shader.attach("transColorful.vert")
-          .attach("transColorful.frag");
+    shader.attach("texture.vert")
+          .attach("texture.frag");
     shader.link();
 
     // 设置为线框模式
@@ -79,10 +148,8 @@ int main(int argc, char* argv[]) {
 
     // 激活shader
     shader.activate();
-    int piLocation = glGetUniformLocation(shader.get(), "PI");
-    int phaseLocation = glGetUniformLocation(shader.get(), "phase");
-    glUniform1f(piLocation, PI);
-    glUniform1f(phaseLocation, PI * 2.0 / 3.0);
+    shader.bind("texture1", 0);
+    shader.bind("texture2", 1);
 
     // Rendering Loop
     while (glfwWindowShouldClose(mWindow) == false) {
@@ -92,15 +159,16 @@ int main(int argc, char* argv[]) {
         glClearColor(0.25f, 0.25f, 0.25f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture1);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, texture2);
+
         // 激活shader
         shader.activate();
-        float time = glfwGetTime();
-        int timeLocation = glGetUniformLocation(shader.get(), "time");
-        glUniform1f(timeLocation, time);
-
         glBindVertexArray(VAO);
         // 绘制索引图形
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, static_cast<GLvoid*>(0));
 
         // Flip Buffers and Draw
         glfwSwapBuffers(mWindow);
