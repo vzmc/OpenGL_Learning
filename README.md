@@ -4,7 +4,7 @@ https://user-images.githubusercontent.com/6869650/149810557-f4b9909d-3f6a-4df4-b
 ## 学习资料
 - https://learnopengl-cn.github.io/
 
-## 基于Glitter框架改编
+## 基于Glitter框架改编(需要使用cmake构建项目)
 - https://github.com/Polytonic/Glitter
 
 # 项目内容
