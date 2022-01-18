@@ -17,7 +17,6 @@
 constexpr double PI = 3.1415926535897932384626433832795;
 
 int main(int argc, char* argv[]) {
-
     // Load GLFW and Create a Window
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -78,6 +77,13 @@ int main(int argc, char* argv[]) {
     // 设置为填充模式
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+    // 激活shader
+    shader.activate();
+    int piLocation = glGetUniformLocation(shader.get(), "PI");
+    int phaseLocation = glGetUniformLocation(shader.get(), "phase");
+    glUniform1f(piLocation, PI);
+    glUniform1f(phaseLocation, PI * 2.0 / 3.0);
+
     // Rendering Loop
     while (glfwWindowShouldClose(mWindow) == false) {
         process_input(mWindow);
@@ -88,14 +94,9 @@ int main(int argc, char* argv[]) {
 
         // 激活shader
         shader.activate();
-
         float time = glfwGetTime();
         int timeLocation = glGetUniformLocation(shader.get(), "time");
-        int piLocation = glGetUniformLocation(shader.get(), "PI");
-        int phaseLocation = glGetUniformLocation(shader.get(), "phase");
         glUniform1f(timeLocation, time);
-        glUniform1f(piLocation, PI);
-        glUniform1f(phaseLocation, PI * 2.0 / 3.0);
 
         glBindVertexArray(VAO);
         // 绘制索引图形

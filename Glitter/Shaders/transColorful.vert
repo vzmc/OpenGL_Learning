@@ -8,19 +8,19 @@ uniform float PI;
 uniform float time;
 uniform float phase;
 
-float mapColor(float color)
+float remapColor(float color)
 {
     return clamp(color, 0.0f, 1.0f);
 }
 
 void main()
 {
-    gl_Position = vec4(aPos, 1.0);
+    float x = aPos.x - cos(time) * 0.5f;
+    float y = aPos.y + sin(time) * 0.5f;
+    gl_Position = vec4(x, y, aPos.z, 1.0f);
 
-    float delta = aDelta;
-    float r = mapColor(sin(time + delta * phase));
-    float g = mapColor(sin(time + phase + delta * phase));
-    float b = mapColor(sin(time + 2.0f * phase + delta * phase));
-
+    float r = remapColor(sin(time + aDelta * phase));
+    float g = remapColor(sin(time + phase + aDelta * phase));
+    float b = remapColor(sin(time + 2.0f * phase + aDelta * phase));
     vertexColor = vec3(r, g, b);
 }
