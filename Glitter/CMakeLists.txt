@@ -11,6 +11,10 @@ include_directories(Headers/
 file(GLOB VENDORS_SOURCES Vendor/glad/src/glad.c)
 file(GLOB PROJECT_HEADERS Headers/*.hpp)
 file(GLOB PROJECT_SOURCES Sources/*.cpp)
+file(GLOB PROJECT_SHADERS Shaders/*.comp
+                          Shaders/*.frag
+                          Shaders/*.geom
+                          Shaders/*.vert)
 file(GLOB PROJECT_CONFIGS ${CMAKE_SOURCE_DIR}/Readme.md
                           ${CMAKE_SOURCE_DIR}/.gitattributes
                           ${CMAKE_SOURCE_DIR}/.gitignore
@@ -19,13 +23,16 @@ file(GLOB PROJECT_CONFIGS ${CMAKE_SOURCE_DIR}/Readme.md
 source_group("Headers" FILES ${PROJECT_HEADERS})
 source_group("Sources" FILES ${PROJECT_SOURCES})
 source_group("Vendors" FILES ${VENDORS_SOURCES})
+source_group("Shaders" FILES ${PROJECT_SHADERS})
+source_group("Configs" FILES ${PROJECT_CONFIGS})
+
 
 add_definitions(-DGLFW_INCLUDE_NONE
                 -DPROJECT_SOURCE_DIR=\"${PROJECT_SOURCE_DIR}\"
                 -DUNICODE
                 -D_UNICODE)
 
-add_library(${PROJECT_NAME} STATIC ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${VENDORS_SOURCES} ${PROJECT_CONFIGS})
+add_library(${PROJECT_NAME} STATIC ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${VENDORS_SOURCES} ${PROJECT_SHADERS} ${PROJECT_CONFIGS})
 
 target_link_libraries(${PROJECT_NAME} assimp glfw
                       ${GLFW_LIBRARIES} ${GLAD_LIBRARIES}
