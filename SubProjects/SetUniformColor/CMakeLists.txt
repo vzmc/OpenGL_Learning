@@ -1,4 +1,4 @@
-﻿project(SetUniformColor)
+﻿set(PROJECT_NAME "SetUniformColor")
 
 include_directories(Headers/
                     ${CMAKE_SOURCE_DIR}/Glitter/Headers/
@@ -25,7 +25,7 @@ add_definitions(-DGLFW_INCLUDE_NONE
                 -DUNICODE
                 -D_UNICODE)
 
-add_executable(${PROJECT_NAME} ${PROJECT_HEADERS} ${PROJECT_SOURCES} ${PROJECT_SHADERS})
+add_executable(${PROJECT_NAME} ${PROJECT_HEADERS} ${PROJECT_SOURCES})
 
 target_link_libraries(${PROJECT_NAME} GlitterLib)
 
@@ -34,5 +34,7 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Glitter/Shaders $<TARGET_FILE_DIR:${PROJECT_NAME}>/Shaders
     DEPENDS ${PROJECT_SHADERS})
 
-set_target_properties(${PROJECT_NAME} PROPERTIES
+set_target_properties(
+    ${PROJECT_NAME} PROPERTIES
+    VS_DEBUGGER_WORKING_DIRECTORY "./Debug"
     FOLDER "SubProjects")

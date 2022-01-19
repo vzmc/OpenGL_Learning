@@ -1,4 +1,4 @@
-﻿project(Blank)
+﻿set(PROJECT_NAME "Blank")
 
 include_directories(Headers/
                     ${CMAKE_SOURCE_DIR}/Glitter/Headers/
@@ -34,5 +34,7 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Glitter/Shaders $<TARGET_FILE_DIR:${PROJECT_NAME}>/Shaders
     DEPENDS ${PROJECT_SHADERS})
 
-set_target_properties(${PROJECT_NAME} PROPERTIES
+set_target_properties(
+    ${PROJECT_NAME} PROPERTIES
+    VS_DEBUGGER_WORKING_DIRECTORY "./Debug"
     FOLDER "SubProjects")
