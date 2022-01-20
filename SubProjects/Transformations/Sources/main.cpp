@@ -15,7 +15,7 @@
 
 #include <shader.hpp>
 
-constexpr double fps = 1.0 / 60.0;
+constexpr double frameTime = 1.0 / 120.0;
 
 void setWindowFPS (GLFWwindow* window);
 
@@ -86,18 +86,16 @@ int main(int argc, char* argv[]) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-    // 读取纹理
+    // 读取纹理1
     GLuint texture1;
     {
         glGenTextures(1, &texture1);
         glBindTexture(GL_TEXTURE_2D, texture1);
         // 为当前绑定的纹理对象设置环绕、过滤方式
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        constexpr float borderColor[] = { 1.0f, 1.0f, 0.0f, 1.0f };
-        glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
         // 加载并生成纹理
         GLint width, height, nrChannels;
         stbi_set_flip_vertically_on_load(true);
@@ -111,18 +109,16 @@ int main(int argc, char* argv[]) {
         stbi_image_free(data);
     }
 
-    // 读取纹理
+    // 读取纹理2
     GLuint texture2;
     {
         glGenTextures(1, &texture2);
         glBindTexture(GL_TEXTURE_2D, texture2);
         // 为当前绑定的纹理对象设置环绕、过滤方式
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        constexpr float borderColor[] = { 1.0f, 1.0f, 0.0f, 1.0f };
-        glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
         // 加载并生成纹理
         GLint width, height, nrChannels;
         stbi_set_flip_vertically_on_load(true);
@@ -150,8 +146,8 @@ int main(int argc, char* argv[]) {
 
     // 激活shader
     shader.activate();
-    shader.bind("texture1", 0);
-    shader.bind("texture2", 1);
+    shader.bind("texture1", 0)
+          .bind("texture2", 1);
 
     // Rendering Loop
     while (glfwWindowShouldClose(mWindow) == false) {
@@ -167,10 +163,17 @@ int main(int argc, char* argv[]) {
         glBindTexture(GL_TEXTURE_2D, texture1);
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, texture2);
+        
+        glBindVertexArray(VAO);
+
+        glm::mat4 trans(1.0f);
+        trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+        trans = glm::rotate(trans, static_cast<float>(glfwGetTime()), glm::vec3(0.0f, 0.0f, 1.0f));
 
         // 激活shader
         shader.activate();
-        glBindVertexArray(VAO);
+        shader.bind("transform", trans);
+
         // 绘制索引图形
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, static_cast<GLvoid*>(0));
 
@@ -181,8 +184,8 @@ int main(int argc, char* argv[]) {
         setWindowFPS(mWindow);
 
         const double deltaTime = glfwGetTime() - frameStartTime;
-        if (fps > deltaTime) {
-            const DWORD sleepTime = (fps - deltaTime) * 1000 / 2;
+        if (frameTime > deltaTime) {
+            const DWORD sleepTime = (frameTime - deltaTime) * 1000;
             Sleep(sleepTime);
         }
     }
@@ -190,7 +193,6 @@ int main(int argc, char* argv[]) {
     glfwTerminate();
     return EXIT_SUCCESS;
 }
-
 
 int    nbFrames = 0;
 double lastTime = 0.0f;
