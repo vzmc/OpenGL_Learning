@@ -15,13 +15,12 @@
 
 #include <shader.hpp>
 
+// imgui
 #include "imgui.h"
 #include "./backends/imgui_impl_glfw.h"
 #include "./backends/imgui_impl_opengl3.h"
 
 constexpr double frameTime = 1.0 / 120.0;
-
-void setWindowFPS (GLFWwindow* window);
 
 int main(int argc, char* argv[]) {
     // Load GLFW and Create a Window
@@ -164,8 +163,8 @@ int main(int argc, char* argv[]) {
     while (glfwWindowShouldClose(mWindow) == false) {
         const double frameStartTime = glfwGetTime();
 
-        ImGui_ImplGlfw_NewFrame();
         ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
         process_input(mWindow);
@@ -204,7 +203,7 @@ int main(int argc, char* argv[]) {
         glfwSwapBuffers(mWindow);
         glfwPollEvents();
 
-        setWindowFPS(mWindow);
+        set_window_fps(mWindow);
         const double deltaTime = glfwGetTime() - frameStartTime;
         if (frameTime > deltaTime) {
             const DWORD sleepTime = (frameTime - deltaTime) * 1000;
@@ -212,28 +211,9 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    ImGui_ImplGlfw_Shutdown();
     ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
     glfwTerminate();
     return EXIT_SUCCESS;
-}
-
-int    nbFrames = 0;
-double lastTime = 0.0f;
-void setWindowFPS(GLFWwindow* win) {
-    // Measure speed
-    const double currentTime = glfwGetTime();
-    nbFrames++;
-
-    if (currentTime - lastTime >= 1.0) {
-        // If last cout was more than 1 sec ago
-        char title[256];
-        title[255] = '\0';
-        snprintf(title, 255, "%s %s - [FPS: %d]", "OpenGL", "4.0", nbFrames);
-        glfwSetWindowTitle(win, title);
-
-        nbFrames = 0;
-        lastTime += 1.0;
-    }
 }
