@@ -6,11 +6,18 @@ include_directories(Headers/
                     Vendor/glad/include/
                     Vendor/glfw/include/
                     Vendor/glm/
-                    Vendor/stb/)
+                    Vendor/stb/
+                    Vendor/imgui/)
 
 file(GLOB VENDORS_SOURCES Vendor/glad/src/glad.c)
-file(GLOB PROJECT_HEADERS Headers/*)
-file(GLOB PROJECT_SOURCES Sources/*)
+file(GLOB PROJECT_HEADERS Headers/*
+                          Vendor/imgui/*.h
+                          Vendor/imgui/backends/*opengl3*.h
+                          Vendor/imgui/backends/*glfw.h)
+file(GLOB PROJECT_SOURCES Sources/*
+                          Vendor/imgui/*.cpp
+                          Vendor/imgui/backends/*opengl3*.cpp
+                          Vendor/imgui/backends/*glfw.cpp)
 file(GLOB PROJECT_SHADERS Shaders/*)
 file(GLOB PROJECT_TEXTURES Textures/*)
 file(GLOB PROJECT_CONFIGS ${CMAKE_SOURCE_DIR}/Readme.md

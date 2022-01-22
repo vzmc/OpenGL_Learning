@@ -15,6 +15,10 @@
 
 #include <shader.hpp>
 
+#include "imgui.h"
+#include "./backends/imgui_impl_glfw.h"
+#include "./backends/imgui_impl_opengl3.h"
+
 constexpr double frameTime = 1.0 / 120.0;
 
 void setWindowFPS (GLFWwindow* window);
@@ -149,9 +153,20 @@ int main(int argc, char* argv[]) {
     shader.bind("texture1", 0)
           .bind("texture2", 1);
 
+    char buf[256] = "Hello world!\0";
+    float f = 0.0f;
+
+    ImGui::CreateContext();
+    ImGui_ImplGlfw_InitForOpenGL(mWindow, true);
+    ImGui_ImplOpenGL3_Init();
+
     // Rendering Loop
     while (glfwWindowShouldClose(mWindow) == false) {
         const double frameStartTime = glfwGetTime();
+
+        ImGui_ImplGlfw_NewFrame();
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui::NewFrame();
 
         process_input(mWindow);
 
@@ -177,12 +192,19 @@ int main(int argc, char* argv[]) {
         // 绘制索引图形
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, static_cast<GLvoid*>(0));
 
+        ImGui::Text("Hello, world %d", 123);
+        if (ImGui::Button("Save"))
+            std::cout<< "Save button clicked!" << std::endl;
+        ImGui::InputText("string", buf, IM_ARRAYSIZE(buf));
+        ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+
         // Flip Buffers and Draw
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(mWindow);
         glfwPollEvents();
 
         setWindowFPS(mWindow);
-
         const double deltaTime = glfwGetTime() - frameStartTime;
         if (frameTime > deltaTime) {
             const DWORD sleepTime = (frameTime - deltaTime) * 1000;
@@ -190,6 +212,9 @@ int main(int argc, char* argv[]) {
         }
     }
 
+    ImGui_ImplGlfw_Shutdown();
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui::DestroyContext();
     glfwTerminate();
     return EXIT_SUCCESS;
 }
