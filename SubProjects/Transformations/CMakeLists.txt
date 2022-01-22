@@ -7,7 +7,8 @@ include_directories(Headers/
                     ${CMAKE_SOURCE_DIR}/Glitter/Vendor/glad/include/
                     ${CMAKE_SOURCE_DIR}/Glitter/Vendor/glfw/include/
                     ${CMAKE_SOURCE_DIR}/Glitter/Vendor/glm/
-                    ${CMAKE_SOURCE_DIR}/Glitter/Vendor/stb/)
+                    ${CMAKE_SOURCE_DIR}/Glitter/Vendor/stb/
+                    ${CMAKE_SOURCE_DIR}/Glitter/Vendor/imgui/)
 
 file(GLOB PROJECT_HEADERS Headers/*)
 file(GLOB PROJECT_SOURCES Sources/*)
