@@ -18,6 +18,8 @@
 #include <stb_image.h>
 #include "GLFW/glfw3.h"
 
+#include <iostream>
+
 // Define Some Constants
 constexpr int mWidth = 1200;
 constexpr int mHeight = 900;
@@ -33,6 +35,7 @@ inline void process_input(GLFWwindow* window) {
     }
 }
 
+int    FPS = 0;
 int    nbFrames = 0;
 double lastTime = 0.0;
 inline void set_window_fps(GLFWwindow* win) {
@@ -44,12 +47,38 @@ inline void set_window_fps(GLFWwindow* win) {
         // If last cout was more than 1 sec ago
         char title[256];
         title[255] = '\0';
-        snprintf(title, 255, "%s %s - [FPS: %d]", "OpenGL", "4.0", nbFrames);
+        FPS = nbFrames;
+        snprintf(title, 255, "%s %s - [FPS: %d]", "OpenGL", "4.0", FPS);
         glfwSetWindowTitle(win, title);
 
         nbFrames = 0;
         lastTime += 1.0;
     }
+}
+
+// 读取纹理
+inline GLuint load_image(const char* fileName, GLint channelMode) {
+    GLuint texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    // 为当前绑定的纹理对象设置环绕、过滤方式
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // 加载并生成纹理
+    GLint width, height, nrChannels;
+    stbi_set_flip_vertically_on_load(true);
+    const auto data = stbi_load(fileName, &width, &height, &nrChannels, 0);
+    if (data) {
+        glTexImage2D(GL_TEXTURE_2D, 0, channelMode, width, height, 0, channelMode, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    } else {
+        std::cout << "Failed to load texture" << std::endl;
+    }
+    stbi_image_free(data);
+    
+    return texture;
 }
 
 #endif //~ Glitter Header

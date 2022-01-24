@@ -137,7 +137,7 @@ int main(int argc, char* argv[]) {
 
     // 创建一个shader
     Mirage::Shader shader;
-    shader.attach("texture.vert")
+    shader.attach("texture_with_trans.vert")
           .attach("texture.frag");
     shader.link();
 
@@ -182,7 +182,7 @@ int main(int argc, char* argv[]) {
 
         glm::mat4 trans(1.0f);
         trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
-        trans = glm::rotate(trans, static_cast<float>(glfwGetTime()), glm::vec3(0.0f, 0.0f, 1.0f));
+        trans = glm::rotate(trans, static_cast<float>(glfwGetTime()), glm::vec3(-1.0f, 1.0f, 0.0f));
 
         // 激活shader
         shader.activate();
