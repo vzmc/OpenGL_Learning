@@ -21,12 +21,12 @@
 #include <iostream>
 
 // Define Some Constants
-constexpr int mWidth = 1200;
-constexpr int mHeight = 900;
+constexpr int SCR_WIDTH = 1200;
+constexpr int SCR_HEIGHT = 900;
 
 inline void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     fprintf(stderr, "Viewport changed (%d, %d)\n", width, height);
-    glViewport(0, 0, mWidth, mHeight);
+    glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 }
 
 inline void process_input(GLFWwindow* window) {
@@ -34,6 +34,9 @@ inline void process_input(GLFWwindow* window) {
         glfwSetWindowShouldClose(window, true);
     }
 }
+
+double deltaTime = 0.0;
+double lastFrame = 0.0;
 
 int    FPS = 0;
 int    nbFrames = 0;
