@@ -31,5 +31,5 @@ add_custom_command(
 
 set_target_properties(
     ${PROJECT_NAME} PROPERTIES
-    VS_DEBUGGER_WORKING_DIRECTORY "./Debug"
+    VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/Glitter"
     FOLDER "SubProjects")
